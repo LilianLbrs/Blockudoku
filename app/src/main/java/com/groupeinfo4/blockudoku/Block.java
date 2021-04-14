@@ -33,11 +33,18 @@ public class Block {
         w = size;
     }
 
-    public void draw(Canvas canvas, Paint paint) {
+    public void drawFill(Canvas canvas, Paint paint) {
         paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(0);
-        paint.setColor(Color.BLUE);
+        paint.setColor(Color.rgb(25,200,188));
         canvas.drawRect(rect, paint);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(5);
+        paint.setColor(Color.BLACK);
+        canvas.drawRect(rect, paint);
+    }
+
+    public void drawStroke(Canvas canvas, Paint paint) {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(5);
         paint.setColor(Color.BLACK);

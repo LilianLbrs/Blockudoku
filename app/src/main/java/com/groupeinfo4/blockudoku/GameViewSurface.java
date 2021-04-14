@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 
@@ -14,6 +16,7 @@ public class GameViewSurface extends SurfaceView implements SurfaceHolder.Callba
 
     Paint paint = new Paint();
     Board board;
+    private GameThread gameThread;
 
     public GameViewSurface(Context context) {
         super(context);
@@ -31,8 +34,12 @@ public class GameViewSurface extends SurfaceView implements SurfaceHolder.Callba
     }
 
     private void init () {
+        //this.setFocusable(true);
+        gameThread = new GameThread(this);
+
         getHolder().addCallback(this);
-        board = new Board ();
+        board = new Board (getContext());
+        setOnTouchListener(board);
     }
 
     private void tryDraw(SurfaceHolder holder) {
@@ -48,13 +55,14 @@ public class GameViewSurface extends SurfaceView implements SurfaceHolder.Callba
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        paint.setColor(Color.WHITE);
-        board.draw(canvas, getWidth(), getHeight());
+        board.draw(canvas);
     }
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
-        tryDraw(getHolder());
+        board.init(getWidth(), getHeight());
+        gameThread.setRunning(true);
+        gameThread.start();
     }
 
     @Override
@@ -64,6 +72,19 @@ public class GameViewSurface extends SurfaceView implements SurfaceHolder.Callba
 
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-
+        boolean retry = true;
+        gameThread.setRunning(false);
+        while (retry) {
+            try {
+                gameThread.join();
+                retry = false;
+            } catch (InterruptedException e) {
+            }
+        }
     }
+
+/*
+
+
+ */
 }

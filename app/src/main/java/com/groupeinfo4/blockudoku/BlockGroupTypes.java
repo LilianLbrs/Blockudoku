@@ -12,49 +12,91 @@ public class BlockGroupTypes {
     public BlockGroupTypes () {
         random = new Random();
         listBlock = new ArrayList<>();
-        listBlock.add(getGroupBlockOne());
-        listBlock.add(getGroupBlockTowHorizontal());
-        listBlock.add(getGroupBlockTowVertical());
+        listBlock.add(getGroupBlockOne1());
+        listBlock.add(getGroupBlockOne2());
+        listBlock.add(getGroupBlockOne3());
+        listBlock.add(getGroupBlockOne4());
+        listBlock.add(getGroupBlockTowHorizontal1());
+        listBlock.add(getGroupBlockTowHorizontal2());
+        listBlock.add(getGroupBlockTowVertical1());
+        listBlock.add(getGroupBlockTowVertical2());
         listBlock.add(getGroupBlockThreeHorizontal());
         listBlock.add(getGroupBlockThreeVertical());
         listBlock.add(getGroupBlockThreeC());
         listBlock.add(getGroupBlockFourTriangle());
+        listBlock.add(getGroupBlockFourTriangle2());
+        listBlock.add(getGroupBlockFourTriangle3());
+        listBlock.add(getGroupBlockFourTriangle4());
         listBlock.add(getGroupBlockFourZ());
         listBlock.add(getGroupBlockFourL());
-        listBlock.add(getGroupBlockFourVertical());
-        listBlock.add(getGroupBlockFourHorizontal());
         listBlock.add(getGroupBlockFourSqure());
+        listBlock.add(getGroupBlockFourSqure2());
+        listBlock.add(getGroupBlockFourSqure3());
+        listBlock.add(getGroupBlockFourSqure4());
         listBlock.add(getGroupBlockFiveL());
-        listBlock.add(getGroupBlockFiveHorizontal());
+        listBlock.add(getGroupBlockFiveL2());
         listBlock.add(getGroupBlockNine());
+
     }
 
     public BlockGroup getRandomBlock () {
         return listBlock.get(random.nextInt(listBlock.size()));
     }
 
-    public BlockGroup getGroupBlockOne() {
-        int[][] matrix = new int[1][1];
+    public BlockGroup getGroupBlockOne1() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
         matrix[0][0] = 1;
         return new BlockGroup(0, 0, 50, 60, matrix);
     }
 
-    public BlockGroup getGroupBlockTowHorizontal() {
-        int[][] matrix = new int[1][2];
+    public BlockGroup getGroupBlockOne2() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
+        matrix[0][2] = 1;
+        return new BlockGroup(0, 0, 50, 60, matrix);
+    }
+
+    public BlockGroup getGroupBlockOne3() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
+        matrix[2][0] = 1;
+        return new BlockGroup(0, 0, 50, 60, matrix);
+    }
+
+    public BlockGroup getGroupBlockOne4() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
+        matrix[2][2] = 1;
+        return new BlockGroup(0, 0, 50, 60, matrix);
+    }
+
+    public BlockGroup getGroupBlockTowHorizontal1() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
         matrix[0][0] = 1;
         matrix[0][1] = 1;
         return new BlockGroup(0, 0, 50, 60, matrix);
     }
 
-    public BlockGroup getGroupBlockTowVertical() {
-        int[][] matrix = new int[2][1];
+    public BlockGroup getGroupBlockTowHorizontal2() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
+        matrix[2][1] = 1;
+        matrix[2][2] = 1;
+        return new BlockGroup(0, 0, 50, 60, matrix);
+    }
+
+    public BlockGroup getGroupBlockTowVertical1() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
         matrix[0][0] = 1;
         matrix[1][0] = 1;
         return new BlockGroup(0, 0, 50, 60, matrix);
     }
 
+    public BlockGroup getGroupBlockTowVertical2() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
+        matrix[1][2] = 1;
+        matrix[2][2] = 1;
+        return new BlockGroup(0, 0, 50, 60, matrix);
+    }
+
     public BlockGroup getGroupBlockThreeHorizontal() {
-        int[][] matrix = new int[1][3];
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
         matrix[0][0] = 1;
         matrix[0][1] = 1;
         matrix[0][2] = 1;
@@ -62,7 +104,7 @@ public class BlockGroupTypes {
     }
 
     public BlockGroup getGroupBlockThreeVertical() {
-        int[][] matrix = new int[3][1];
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
         matrix[0][0] = 1;
         matrix[1][0] = 1;
         matrix[2][0] = 1;
@@ -70,7 +112,7 @@ public class BlockGroupTypes {
     }
 
     public BlockGroup getGroupBlockThreeC() {
-        int[][] matrix = new int[2][2];
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
         matrix[0][0] = 1;
         matrix[1][0] = 1;
         matrix[1][1] = 1;
@@ -78,7 +120,7 @@ public class BlockGroupTypes {
     }
 
     public BlockGroup getGroupBlockFourZ() {
-        int[][] matrix = new int[2][3];
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
         matrix[0][1] = 1;
         matrix[0][2] = 1;
         matrix[1][0] = 1;
@@ -87,16 +129,43 @@ public class BlockGroupTypes {
     }
 
     public BlockGroup getGroupBlockFourTriangle() {
-        int[][] matrix = new int[2][3];
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
         matrix[0][1] = 1;
         matrix[1][0] = 1;
         matrix[1][1] = 1;
         matrix[1][2] = 1;
+        return new BlockGroup(0, 0, 50, 60, matrix);
+    }
+
+    public BlockGroup getGroupBlockFourTriangle2() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
+        matrix[2][1] = 1;
+        matrix[1][0] = 1;
+        matrix[1][1] = 1;
+        matrix[1][2] = 1;
+        return new BlockGroup(0, 0, 50, 60, matrix);
+    }
+
+    public BlockGroup getGroupBlockFourTriangle3() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
+        matrix[2][1] = 1;
+        matrix[0][1] = 1;
+        matrix[1][1] = 1;
+        matrix[2][1] = 1;
+        return new BlockGroup(0, 0, 50, 60, matrix);
+    }
+
+    public BlockGroup getGroupBlockFourTriangle4() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
+        matrix[0][1] = 1;
+        matrix[0][1] = 1;
+        matrix[1][1] = 1;
+        matrix[2][1] = 1;
         return new BlockGroup(0, 0, 50, 60, matrix);
     }
 
     public BlockGroup getGroupBlockFourL() {
-        int[][] matrix = new int[2][3];
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
         matrix[0][0] = 1;
         matrix[1][0] = 1;
         matrix[1][1] = 1;
@@ -104,26 +173,8 @@ public class BlockGroupTypes {
         return new BlockGroup(0, 0, 50, 60, matrix);
     }
 
-    public BlockGroup getGroupBlockFourHorizontal() {
-        int[][] matrix = new int[1][4];
-        matrix[0][0] = 1;
-        matrix[0][1] = 1;
-        matrix[0][2] = 1;
-        matrix[0][3] = 1;
-        return new BlockGroup(0, 0, 50, 60, matrix);
-    }
-
-    public BlockGroup getGroupBlockFourVertical() {
-        int[][] matrix = new int[4][1];
-        matrix[0][0] = 1;
-        matrix[1][0] = 1;
-        matrix[2][0] = 1;
-        matrix[3][0] = 1;
-        return new BlockGroup(0, 0, 50, 60, matrix);
-    }
-
     public BlockGroup getGroupBlockFourSqure() {
-        int[][] matrix = new int[2][2];
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
         matrix[0][0] = 1;
         matrix[0][1] = 1;
         matrix[1][0] = 1;
@@ -131,8 +182,35 @@ public class BlockGroupTypes {
         return new BlockGroup(0, 0, 50, 60, matrix);
     }
 
+    public BlockGroup getGroupBlockFourSqure2() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
+        matrix[0][1] = 1;
+        matrix[0][2] = 1;
+        matrix[1][1] = 1;
+        matrix[1][2] = 1;
+        return new BlockGroup(0, 0, 50, 60, matrix);
+    }
+
+    public BlockGroup getGroupBlockFourSqure3() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
+        matrix[1][0] = 1;
+        matrix[1][1] = 1;
+        matrix[2][0] = 1;
+        matrix[2][1] = 1;
+        return new BlockGroup(0, 0, 50, 60, matrix);
+    }
+
+    public BlockGroup getGroupBlockFourSqure4() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
+        matrix[1][1] = 1;
+        matrix[1][2] = 1;
+        matrix[2][1] = 1;
+        matrix[2][2] = 1;
+        return new BlockGroup(0, 0, 50, 60, matrix);
+    }
+
     public BlockGroup getGroupBlockFiveL() {
-        int[][] matrix = new int[3][3];
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
         matrix[0][0] = 1;
         matrix[0][1] = 1;
         matrix[0][2] = 1;
@@ -141,18 +219,19 @@ public class BlockGroupTypes {
         return new BlockGroup(0, 0, 50, 60, matrix);
     }
 
-    public BlockGroup getGroupBlockFiveHorizontal() {
-        int[][] matrix = new int[1][5];
-        matrix[0][0] = 1;
-        matrix[0][1] = 1;
-        matrix[0][2] = 1;
-        matrix[0][3] = 1;
-        matrix[0][4] = 1;
+    public BlockGroup getGroupBlockFiveL2() {
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
+        matrix[2][0] = 1;
+        matrix[2][1] = 1;
+        matrix[2][2] = 1;
+        matrix[1][2] = 1;
+        matrix[1][0] = 1;
         return new BlockGroup(0, 0, 50, 60, matrix);
     }
 
+
     public BlockGroup getGroupBlockNine() {
-        int[][] matrix = new int[3][3];
+        int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
                 matrix[i][j] = 1;
@@ -160,6 +239,8 @@ public class BlockGroupTypes {
         }
         return new BlockGroup(0, 0, 50, 60, matrix);
     }
+
+
 
 }
 
