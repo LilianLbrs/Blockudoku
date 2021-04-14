@@ -9,6 +9,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.MotionEvent;
 import android.widget.TextView;
+//TODO message déroulant pour les règles
+// image d'accueil plus petite (moins flou)
+// changer icone de l'appli pour être cohérente avec l'image d'accueil
+// bouton recommencer (detection de fin de partie)
+// pouvoir placer les pièces sur les bords
 
 public class Board implements View.OnTouchListener{
     Context context;
