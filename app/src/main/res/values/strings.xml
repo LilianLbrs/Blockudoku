@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Blockudoku</string>
+    <string name="preference_file_key">com.groupeinfo4.blockudoku.PREFERENCE_FILE_KEY</string>
 </resources>

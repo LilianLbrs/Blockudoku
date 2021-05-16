@@ -13,7 +13,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Button rules;
     private Button newGame;
-    private Button resumeGame;
     private Button exit;
 
     @Override
@@ -24,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
         this.rules = (Button) findViewById(R.id.rules);
         this.exit = (Button) findViewById(R.id.exit);
         this.newGame = (Button) findViewById(R.id.newGame);
-        this.resumeGame = (Button) findViewById(R.id.resumeGame);
 
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,14 +47,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(newGame);
             }
         });
-
-        /*newGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent resumeGame = new Intent(getApplicationContext(), ResumeGame.class);
-                startActivity(resumeGame);
-            }
-        });*/
 
     }
 }

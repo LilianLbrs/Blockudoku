@@ -35,7 +35,7 @@ public class BlockGroupTypes {
         listBlock.add(getGroupBlockFourSqure4());
         listBlock.add(getGroupBlockFiveL());
         listBlock.add(getGroupBlockFiveL2());
-        listBlock.add(getGroupBlockNine());
+        //listBlock.add(getGroupBlockNine());
 
     }
 
@@ -221,14 +221,13 @@ public class BlockGroupTypes {
 
     public BlockGroup getGroupBlockFiveL2() {
         int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};
-        matrix[2][0] = 1;
-        matrix[2][1] = 1;
+        matrix[0][2] = 1;
+        matrix[0][1] = 1;
+        matrix[0][0] = 1;
         matrix[2][2] = 1;
         matrix[1][2] = 1;
-        matrix[1][0] = 1;
         return new BlockGroup(0, 0, 50, 60, matrix);
     }
-
 
     public BlockGroup getGroupBlockNine() {
         int[][] matrix = {{0,0,0}, {0,0,0}, {0,0,0}};

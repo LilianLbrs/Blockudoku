@@ -40,16 +40,12 @@ public class GameViewSurface extends SurfaceView implements SurfaceHolder.Callba
         getHolder().addCallback(this);
         board = new Board (getContext());
         setOnTouchListener(board);
-    }
 
-    private void tryDraw(SurfaceHolder holder) {
-        Canvas canvas = holder.lockCanvas();
-        if ( canvas != null) {
-            draw(canvas);
-            holder.unlockCanvasAndPost(canvas);
+        if (!gameThread.isAlive()) {
+            gameThread.setRunning(true);
+            gameThread.start();
         }
     }
-
 
 
     @Override
@@ -61,8 +57,6 @@ public class GameViewSurface extends SurfaceView implements SurfaceHolder.Callba
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
         board.init(getWidth(), getHeight());
-        gameThread.setRunning(true);
-        gameThread.start();
     }
 
     @Override
@@ -72,7 +66,7 @@ public class GameViewSurface extends SurfaceView implements SurfaceHolder.Callba
 
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-        boolean retry = true;
+        /*boolean retry = true;
         gameThread.setRunning(false);
         while (retry) {
             try {
@@ -80,11 +74,7 @@ public class GameViewSurface extends SurfaceView implements SurfaceHolder.Callba
                 retry = false;
             } catch (InterruptedException e) {
             }
-        }
+        }*/
     }
 
-/*
-
-
- */
 }

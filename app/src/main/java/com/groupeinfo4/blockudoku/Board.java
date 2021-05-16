@@ -1,25 +1,40 @@
 package com.groupeinfo4.blockudoku;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Bundle;
 import android.view.View;
 import android.view.MotionEvent;
+import android.widget.ImageButton;
 import android.widget.TextView;
-//TODO message déroulant pour les règles
-// image d'accueil plus petite (moins flou)
-// changer icone de l'appli pour être cohérente avec l'image d'accueil
-// bouton recommencer (detection de fin de partie)
-// pouvoir placer les pièces sur les bords
+
+import java.util.StringTokenizer;
 
 public class Board implements View.OnTouchListener{
     Context context;
-    public TextView scoreView;
+    private Activity activity;
 
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
+    private final String HIGH_SCORE_FIELD = "high_score";
+    private final String SCORE_FIELD = "score";
+    private final String MATRIX_FIELD = "matrix";
+    private final String BG1_FIELD = "block_group_1";
+    private final String BG2_FIELD = "block_group_2";
+    private final String BG3_FIELD = "block_group_3";
+
+    private ImageButton retry;
+    public TextView scoreView;
     private int score = 0;
+    public TextView highScoreView;
+    private int highScore = 0;
 
     public float screenWidth;
     public float screenHeight;
@@ -59,6 +74,7 @@ public class Board implements View.OnTouchListener{
 
     public Board(Context context) {
         this.context = context;
+        activity = getActivity();
 
         matrix = new int[9][9];
         for (int rows = 0; rows < 9; rows++)
@@ -66,6 +82,16 @@ public class Board implements View.OnTouchListener{
                 matrix[rows][cols] = 0;
 
         paint = new Paint();
+    }
+
+    public Activity getActivity() {
+        while (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity)context;
+            }
+            context = ((ContextWrapper)context).getBaseContext();
+        }
+        return null;
     }
 
 
@@ -91,13 +117,28 @@ public class Board implements View.OnTouchListener{
         }while (thirdBlockGroup == firstBlockGroup || thirdBlockGroup == secondBlockGroup);
         thirdBlockGroup.middleX = 3 * blockSeparator + (float) 7.5 * blockCellWidth;
         thirdBlockGroup.middleY = (screenHeight + gridWidth) / 2 + (float) 1.5*blockCellWidth;
+
     }
 
     public void init(float screenWidth, float screenHeight) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
-        scoreView = (TextView) ((Activity)context).findViewById(R.id.score);
 
+        scoreView = (TextView) ((Activity)context).findViewById(R.id.score);
+        highScoreView = (TextView) ((Activity)context).findViewById(R.id.highScore);
+        retry = (ImageButton) ((Activity)context).findViewById(R.id.retryBtn);
+        retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetBoard();
+            }
+        });
+
+
+        sharedPref = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+        highScore = sharedPref.getInt(HIGH_SCORE_FIELD, highScore);
+        highScoreView.setText("Record : " + highScore);
 
         // We compute some sizes
         gridWidth = Math.min(screenWidth, 1500);
@@ -111,9 +152,107 @@ public class Board implements View.OnTouchListener{
         blocksPosY = (screenHeight + gridWidth) / 2;
         HEADER = screenHeight /10;
 
-        // --------- test ---------
         createNewGroups();
-        // --------------------------
+
+        if(sharedPref.getInt(SCORE_FIELD, 0) != 0) resumeGame();
+    }
+
+    private void resumeGame () {
+        getMatrixFromPrefs();
+        getBlockGroupsFromPrefs();
+        score = sharedPref.getInt(SCORE_FIELD, 0);
+    }
+
+    public void saveState () {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j ++) {
+                str.append(matrix[i][j]).append(",");
+            }
+        }
+        editor.putString(MATRIX_FIELD, str.toString());
+
+        StringBuilder bg1 = new StringBuilder();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                bg1.append(firstBlockGroup.matrixBlock[i][j]).append(",");
+            }
+        }
+        if(firstBlockGroup.hidden) bg1.append("true");
+        else bg1.append("false");
+        editor.putString(BG1_FIELD, bg1.toString());
+
+        StringBuilder bg2 = new StringBuilder();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                bg2.append(secondBlockGroup.matrixBlock[i][j]).append(",");
+            }
+        }
+        if(secondBlockGroup.hidden) bg2.append("true");
+        else bg2.append("false");
+        editor.putString(BG2_FIELD, bg2.toString());
+
+        StringBuilder bg3 = new StringBuilder();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                bg3.append(thirdBlockGroup.matrixBlock[i][j]).append(",");
+            }
+        }
+        if(thirdBlockGroup.hidden) bg3.append("true");
+        else bg3.append("false");
+        editor.putString(BG3_FIELD, bg3.toString());
+
+        editor.putInt(SCORE_FIELD, score);
+
+        editor.commit();
+    }
+
+    private void getMatrixFromPrefs () {
+        String savedString = sharedPref.getString(MATRIX_FIELD, "");
+        StringTokenizer st = new StringTokenizer(savedString, ",");
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j ++) {
+                matrix[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
+    }
+
+    private void getBlockGroupsFromPrefs () {
+        String savedString1 = sharedPref.getString(BG1_FIELD, "");
+        if (savedString1 != "") {
+            StringTokenizer st1 = new StringTokenizer(savedString1, ",");
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    firstBlockGroup.matrixBlock[i][j] = Integer.parseInt(st1.nextToken());
+                }
+            }
+            if (st1.nextToken().equals("true")) firstBlockGroup.hidden = true;
+            else firstBlockGroup.hidden = false;
+        }
+
+        String savedString2 = sharedPref.getString(BG2_FIELD, "");
+        if(savedString2 != "") {
+            StringTokenizer st2 = new StringTokenizer(savedString2, ",");
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    secondBlockGroup.matrixBlock[i][j] = Integer.parseInt(st2.nextToken());
+                }
+            }
+            if (st2.nextToken().equals("true")) secondBlockGroup.hidden = true;
+            else secondBlockGroup.hidden = false;
+        }
+
+        String savedString3 = sharedPref.getString(BG3_FIELD, "");
+        if(savedString3 != "") {
+            StringTokenizer st3 = new StringTokenizer(savedString3, ",");
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    thirdBlockGroup.matrixBlock[i][j] = Integer.parseInt(st3.nextToken());
+                }
+            }
+            if (st3.nextToken().equals("true")) thirdBlockGroup.hidden = true;
+            else thirdBlockGroup.hidden = false;
+        }
     }
 
     public void draw(Canvas canvas) {
@@ -155,9 +294,6 @@ public class Board implements View.OnTouchListener{
             }
         }
 
-        //Create new groups if the three blocks are placed
-        if(firstBlockGroup.hidden && secondBlockGroup.hidden && thirdBlockGroup.hidden) createNewGroups();
-
         //Draws the blue squares on the game board
         for (int row = 0; row < matrix.length; row++)
             for (int col = 0; col < matrix[0].length; col++) {
@@ -168,8 +304,19 @@ public class Board implements View.OnTouchListener{
                 }
             }
 
-        //Displays the actual score
-        scoreView.setText("Score : " + score);
+        activity.runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                //Displays the actual score
+                scoreView.setText("Score : " + score);
+                highScoreView.setText("Record : " + highScore);
+
+            }
+        });
+
+
     }
 
     public void processPressing(MotionEvent motionEvent) {
@@ -188,6 +335,8 @@ public class Board implements View.OnTouchListener{
             selectedBlockGroup = thirdBlockGroup;
             //System.out.println("Piece 3 cliquée");
         }
+
+        if (selectedBlockGroup != null && checkGameOver(selectedBlockGroup)) gameOver();
     }
 
 
@@ -206,12 +355,42 @@ public class Board implements View.OnTouchListener{
                     index[0] = -1;
                     index[1] = -1;
                     removeBlocks();
+                    //Create new groups if the three blocks are placed
+                    if(firstBlockGroup.hidden && secondBlockGroup.hidden && thirdBlockGroup.hidden) createNewGroups();
+                    saveState();
                 }
 
             }
             return false;
         }
         return false;
+    }
+
+    private boolean checkGameOver (BlockGroup bg){
+        for (int rows = 0; rows < matrix.length; rows++) {
+            for (int cols = 0; cols < matrix[0].length; cols++) {
+                int [] ind = {rows, cols};
+                if (canPlaceGroupBlock(ind, bg.matrixBlock)) return false;
+            }
+        }
+        return true;
+    }
+
+    private void gameOver () {
+        if(score > highScore){
+            editor.putInt(HIGH_SCORE_FIELD, score);
+            editor.apply();
+        }
+        AlertDialog.Builder gameOverPopUp = new AlertDialog.Builder(activity);
+        gameOverPopUp.setTitle("Game Over !");
+        gameOverPopUp.setMessage("Cliquez ci-dessous pour recommencer une partie.");
+        gameOverPopUp.setPositiveButton("Recommencer une partie", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                resetBoard();
+            }
+        });
+        gameOverPopUp.show();
     }
 
     public int[] getIndexByCoordinate(float x, float y) {
@@ -238,8 +417,8 @@ public class Board implements View.OnTouchListener{
             for (int col = 0; col < matrixBlock[0].length; col++) {
                 int matrixRow = index[0] - 1 + row;
                 int matrixCol = index[1] - 1 + col;
-                if (matrixRow >= matrix.length || matrixCol >= matrix[0].length
-                    || matrixRow < 0 || matrixCol < 0) {
+                if (matrixBlock[row][col] == 1 && (matrixRow >= matrix.length || matrixCol >= matrix[0].length
+                    || matrixRow < 0 || matrixCol < 0)) {
                     return false;
                 }
                 if (matrixBlock[row][col] == 1 && matrix[matrixRow][matrixCol] != 0) {
@@ -299,6 +478,17 @@ public class Board implements View.OnTouchListener{
         return true;
     }
 
+    private boolean checkSquare(int square){
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (matrix[((int) (square/3)) * 3 + i][((int)(square%3)) * 3 + j] != 1) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     private void removeBlocks () {
         for (int i = 0; i < matrix.length; i++){
             if (checkRow(i)){
@@ -314,5 +504,28 @@ public class Board implements View.OnTouchListener{
                 score += matrix[0].length;
             }
         }
+        for (int i = 0; i < 9; i++){
+            if(checkSquare(i)){
+                for (int x = 0; x < 3; x++) {
+                    for (int j = 0; j < 3; j++) {
+                        matrix[((int) (i/3)) * 3 + x][((int)(i%3)) * 3 + j] = 0;
+                    }
+                }
+                score += matrix.length;
+            }
+        }
+    }
+
+    private void resetBoard () {
+        for (int i = 0; i< matrix.length; i++){
+            for (int j = 0; j< matrix[0].length; j++){
+                matrix[i][j] = 0;
+            }
+        }
+        score = 0;
+        createNewGroups();
+        selectedBlockGroup = null;
+        highScore = sharedPref.getInt(HIGH_SCORE_FIELD, highScore);
+        saveState();
     }
 }

@@ -21,23 +21,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/rules"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="16dp"
+    <ScrollView
+        android:layout_width="297dp"
+        android:layout_height="593dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="100dp"
         android:background="@color/dark_teal"
-        android:fontFamily="sans-serif-condensed-light"
-        android:lineSpacingExtra="8sp"
-        android:text="\nBlockudoku est un jeu qui nécessite de l’observation, de l’organisation et de l’anticipation. \n \nDans ce jeu, vous devez en effet placer sur une grille de 81 cases des blocs imposés. A vous de les imbriquer correctement afin de réaliser des lignes ou des colonnes complètes et de faire disparaître les blocs qui les composent.\n \n Petite nouveauté dans ce type de jeu, vous placez vos blocs sur une grille similaire à celle d’un Sudoku. Si vous assemblez correctement vos blocs en constituant un carré complet de 9 cases (3*3), les blocs disparaissent également. \nLe but du jeu est de placer un maximum de blocs sur la grille, sans vous laisser déborder, pour marquer un maximum de points.\n"
-        android:textAlignment="center"
-        android:textColor="@color/couleur_claire"
-        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="sans-serif-condensed-light"
+            android:lineSpacingExtra="8sp"
+            android:text="\nBlockudoku est un jeu qui nécessite de l’observation, de l’organisation et de l’anticipation. \n \nDans ce jeu, vous devez en effet placer sur une grille de 81 cases des blocs imposés. A vous de les imbriquer correctement afin de réaliser des lignes, des colonnes ou des carrés complets et de faire disparaître les blocs qui les composent.\n \n Petite nouveauté dans ce type de jeu, vous placez vos blocs sur une grille similaire à celle d’un Sudoku. Pour cela, il vous suffit de sélectionner parmi les 3 pièces disponibles celle que vous souhaitez jouer puis de cliquer sur la case qui correspondra au centre du bloc 3*3 sélectionné. Si vous assemblez correctement vos blocs en constituant un carré complet de 9 cases (3*3), les blocs disparaissent également.\n \nLe but du jeu est de placer un maximum de blocs sur la grille, sans vous laisser déborder, pour marquer un maximum de points.\n"            android:textAlignment="center"
+            android:textColor="@color/couleur_claire"
+            android:textSize="18sp" />
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
